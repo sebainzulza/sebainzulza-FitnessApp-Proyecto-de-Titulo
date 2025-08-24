@@ -1,7 +1,7 @@
 export default {
     // PROMPT_PLAN: pide únicamente un JSON válido con valores numéricos.
     // Respuesta estricta: solo el objeto JSON, sin texto adicional ni explicaciones.
-    PROMPT_PLAN: `Usa la edad = 28 años y, basándote en el peso, altura, género, objetivo y días de entrenamiento por semana, calcula y devuelve SÓLO un objeto JSON válido que siga exactamente este esquema (sin unidades, sólo números):
+    PROMPT_PLAN: `Basándote en el peso, altura, género, objetivo, edad y días de entrenamiento por semana, calcula y devuelve SÓLO un objeto JSON válido que siga exactamente este esquema (sin unidades, sólo números):
 {
     "calorias": <number>,
     "proteinas": <number>,

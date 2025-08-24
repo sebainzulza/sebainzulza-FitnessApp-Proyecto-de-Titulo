@@ -31,36 +31,63 @@ export default function Preferance() {
             return;
         }
 
-        const data = {
-            uid: user?._id,
-            peso: peso,
-            altura: altura,
-            genero: genero,
-            objetivo: objetivo,
-            diasEntrenamientoPorSemana: diasEntrenamientoPorSemana,
-            edad: edad
+        if (!peso || !altura || !genero || !objetivo || !diasEntrenamientoPorSemana || !edad) {
+            Alert.alert('Alto!', 'Por favor completa todos los campos');
+            return;
         }
 
-        //Calcular calorías con IA
-        const PROMPT = JSON.stringify(data)+Prompt.PROMPT_PLAN
-        console.log(PROMPT);
-        const resultadoIA=await CrearPlanIA(PROMPT);
-        console.log(resultadoIA.choices[0].message.content)
+        // Calcular calorías y macros con IA
+        const PROMPT = JSON.stringify({
+            peso,
+            altura,
+            genero,
+            objetivo,
+            diasEntrenamientoPorSemana,
+            edad
+        }) + Prompt.PROMPT_PLAN;
+        console.log('PROMPT IA:', PROMPT);
+        const resultadoIA = await CrearPlanIA(PROMPT);
+        let macros = resultadoIA;
+        if (resultadoIA.choices && resultadoIA.choices[0]?.message?.content) {
+            macros = JSON.parse(resultadoIA.choices[0].message.content);
+        }
+        console.log('Macros IA:', macros);
 
-        
+        // Log del user._id para depuración
+        console.log('user._id:', user?._id);
 
-        const result = await UpdateUserPref({
-            ...data,
-            ...resultadoIA
-            //VER POR QUE NO SE PUEDE CAMBIAR PANTALLA Y GUARDAR EN CONVEX
-        })
-
-        setUser(prev => ({
-            ...prev,
-            ...data
-        }))
-
-        router.replace('/(tabs)/Home');
+        try {
+            const result = await UpdateUserPref({
+                uid: user._id,
+                altura: String(altura),
+                peso: String(peso),
+                genero: String(genero),
+                objetivo: String(objetivo),
+                diasEntrenamientoPorSemana: String(diasEntrenamientoPorSemana),
+                edad: Number(edad),
+                calorias: Number(macros.calorias),
+                proteinas: Number(macros.proteinas),
+                carbohidratos: Number(macros.carbohidratos),
+                grasas: Number(macros.grasas)
+            });
+            // El resultado de la mutación no es necesario, solo se usa para confirmar que se ejecutó correctamente
+            setUser(prev => ({
+                ...prev,
+                altura: String(altura),
+                peso: String(peso),
+                genero: String(genero),
+                objetivo: String(objetivo),
+                diasEntrenamientoPorSemana: String(diasEntrenamientoPorSemana),
+                edad: Number(edad),
+                calorias: Number(macros.calorias),
+                proteinas: Number(macros.proteinas),
+                carbohidratos: Number(macros.carbohidratos),
+                grasas: Number(macros.grasas)
+            }));
+            router.replace('/(tabs)/Home');
+        } catch (err) {
+            console.error('Convex error:', err);
+        }
 
     }
 
