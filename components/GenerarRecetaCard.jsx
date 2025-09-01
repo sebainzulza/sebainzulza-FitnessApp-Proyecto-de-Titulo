@@ -4,8 +4,10 @@ import { LinearGradient } from 'expo-linear-gradient'
 import Colors from '../shared/Colors'
 import { HugeiconsIcon } from '@hugeicons/react-native'
 import { ArrowRight02Icon } from '@hugeicons/core-free-icons';
+import { useRouter } from 'expo-router'
 
 export default function GenerarRecetaCard() {
+    const router=useRouter()
     return (
         <LinearGradient
             colors={[Colors.PRIMARY, Colors.DARKBLUE]}
@@ -28,7 +30,9 @@ export default function GenerarRecetaCard() {
                 marginTop: 7
             }}>Deja que la IA haga su magia... 👀🔮🍴</Text>
 
-            <TouchableOpacity style={{
+            <TouchableOpacity 
+            onPress={()=>router.push('/generar-receta-IA')}
+            style={{
                 marginTop: 10,
                 backgroundColor: Colors.WHITE,
                 padding: 12,

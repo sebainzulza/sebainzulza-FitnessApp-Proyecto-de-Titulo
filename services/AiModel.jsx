@@ -1,22 +1,17 @@
-// Replaced OpenAI Node SDK usage (not compatible with Expo/React Native bundler)
-// with a fetch-based call to OpenRouter's REST endpoint. This runs in the
-// client (Expo) and expects a public env variable EXPO_PUBLIC_OPENROUTER_API_KEY
-// to be available at runtime. For production, consider proxying requests to a
-// backend to keep the key private.
+import axios from "axios";
 
-const OPENROUTER_URL = 'https://openrouter.ai/api/v1/chat/completions'
-
-export const CrearPlanIA = async (PROMPT) => {
-    const API_KEY = process.env.EXPO_PUBLIC_OPENROUTER_API_KEY
+// Función base para llamar a la IA
+const callOpenRouterAI = async ({ PROMPT, model = 'google/gemma-3n-e2b-it:free', response_format }) => {
+    const API_KEY = process.env.EXPO_PUBLIC_OPENROUTER_API_KEY;
     if (!API_KEY) {
-        throw new Error('EXPO_PUBLIC_OPENROUTER_API_KEY no está definida. Añádela en app.json o usa un backend para la clave.')
+        throw new Error('EXPO_PUBLIC_OPENROUTER_API_KEY no está definida. Añádela en app.json o usa un backend para la clave.');
     }
 
     const payload = {
-        model: 'google/gemma-3n-e2b-it:free',
+        model,
         messages: [{ role: 'user', content: PROMPT }],
-        // Puedes añadir temperature, max_tokens, etc. si lo necesitas
-    }
+        ...(response_format ? { response_format } : {})
+    };
 
     const res = await fetch(OPENROUTER_URL, {
         method: 'POST',
@@ -25,36 +20,58 @@ export const CrearPlanIA = async (PROMPT) => {
             Authorization: `Bearer ${API_KEY}`,
         },
         body: JSON.stringify(payload),
-    })
+    });
 
-    const text = await res.text()
-    let json
+    const text = await res.text();
+    let json;
     try {
-        json = text ? JSON.parse(text) : null
+        json = text ? JSON.parse(text) : null;
     } catch (err) {
-        throw new Error(`OpenRouter returned non-JSON response (status ${res.status}): ${text}`)
+        throw new Error(`OpenRouter returned non-JSON response (status ${res.status}): ${text}`);
     }
 
     if (!res.ok) {
-        const errDetail = json?.error || json || text
-        throw new Error(`OpenRouter error ${res.status}: ${JSON.stringify(errDetail)}`)
+        const errDetail = json?.error || json || text;
+        throw new Error(`OpenRouter error ${res.status}: ${JSON.stringify(errDetail)}`);
     }
 
-        // Extraer el contenido textual de la respuesta (compatibilidad con varios formatos)
-        const RespIA = json?.choices?.[0]?.message?.content || json?.choices?.[0]?.text || json?.output?.[0]?.content || null
+    const RespIA = json?.choices?.[0]?.message?.content || json?.choices?.[0]?.text || json?.output?.[0]?.content || null;
 
-                if (RespIA && typeof RespIA === 'string') {
-                    try {
-                        const JSONContent = JSON.parse(RespIA.replace('```json', '').replace(/```/g, '').trim())
-                        console.log(JSONContent)
-                        return JSONContent
-                    } catch (err) {
-                        console.warn('No se pudo parsear JSON desde la respuesta IA:', err.message)
-                    }
-                }
+    if (RespIA && typeof RespIA === 'string') {
+        try {
+            const JSONContent = JSON.parse(RespIA.replace('```json', '').replace(/```/g, '').trim());
+            console.log(JSONContent);
+            return JSONContent;
+        } catch (err) {
+            console.warn('No se pudo parsear JSON desde la respuesta IA:', err.message);
+        }
+    }
+    return json;
+};
 
-                return json
-}
+// Genera opciones de recetas usando IA
+export const GenerarIAReceta = async (PROMPT) => {
+    return await callOpenRouterAI({ PROMPT, response_format: 'json_object' });
+};
 
-// Nota: para desarrollo rápido puedes poner la clave temporalmente aquí:
-// const API_KEY = 'tu_clave_aqui' (NO recomendado en producción)
+const OPENROUTER_URL = 'https://openrouter.ai/api/v1/chat/completions'
+
+export const CrearPlanIA = async (PROMPT) => {
+    return await callOpenRouterAI({ PROMPT });
+};
+
+const BASE_URL='https://aigurulab.tech';
+export const GenerarImagenReceta=async(prompt) => await axios.post(BASE_URL+'/api/generate-image',
+        {
+            width: 1024,
+            height: 1024,
+            input: prompt,
+            model: 'sdxl',//'flux'
+            aspectRatio:"1:1"//Applicable to Flux model only
+        },
+        {
+            headers: {
+                'x-api-key': process.env.EXPO_PUBLIC_AIGURU_LAB_API_KEY, // Your API Key
+                'Content-Type': 'application/json', // Content Type
+            },
+        })
