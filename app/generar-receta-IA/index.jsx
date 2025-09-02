@@ -13,18 +13,26 @@ export default function GenerarRecetaIA() {
         const [recetaOpcion, setRecetaOpcion]=useState([])
     const GenerarRecetaOpciones=async()=>{
         setLoading(true);
-        // Modelo IA para generar recetas
+        
         try {
             const PROMPT = input + Prompt.GENERAR_RECETA_OPCION_PROMPT
             const recetas = await GenerarIAReceta(PROMPT)
-            setRecetaOpcion(recetas)
+            
+            // Extraer y parsear opciones de recetas
+            if (recetas?.choices && recetas.choices[0]?.message?.content) {
+                const contenido = recetas.choices[0].message.content;
+                const contenidoLimpio = contenido.replace(/```json\n?/g, '').replace(/```/g, '').trim();
+                const opcionesRecetas = JSON.parse(contenidoLimpio);
+                
+                setRecetaOpcion(opcionesRecetas)
+                console.log('Opciones generadas:', opcionesRecetas.length);
+            }
+            
+        } catch (e) {
+            console.log('Error al generar opciones:', e);
+        } finally {
             setLoading(false)
         }
-        catch (e) {
-            console.log('Error al generar receta IA:', e);
-            setLoading(false)
-        }
-        ;
     }
 
     return (

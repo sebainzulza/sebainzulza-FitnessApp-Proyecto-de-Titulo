@@ -18,5 +18,11 @@ export default defineSchema({
         proteinas: v.optional(v.number()),
         carbohidratos: v.optional(v.number()),
         grasas: v.optional(v.number())
+    }),
+    recetas:defineTable({
+        jsonData:v.any(),
+        uid:v.id('Users'),
+        imagenUrl:v.string(),
+        recetaNombre:v.any()
+        })
     })
-})
