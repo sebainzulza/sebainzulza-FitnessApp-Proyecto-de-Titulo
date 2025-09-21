@@ -5,5 +5,7 @@ export default{
     BLUE: '#2980B9',
     PINK: '#F542b3',
     RED: '#E74C3C',
-    DARKBLUE: '#00008B'
+    DARKBLUE: '#00008B',
+    GREEN: '#39b981',
+    SECONDARY : '#fbf5ff'
 }

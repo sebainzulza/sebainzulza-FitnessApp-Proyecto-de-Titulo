@@ -15,26 +15,21 @@ export default function GenerarRecetaIA() {
         setLoading(true);
         
         try {
-            const PROMPT = input + Prompt.GENERAR_RECETA_OPCION_PROMPT
-            const recetas = await GenerarIAReceta(PROMPT)
-            
-            // Extraer y parsear opciones de recetas
-            if (recetas?.choices && recetas.choices[0]?.message?.content) {
-                const contenido = recetas.choices[0].message.content;
-                const contenidoLimpio = contenido.replace(/```json\n?/g, '').replace(/```/g, '').trim();
-                const opcionesRecetas = JSON.parse(contenidoLimpio);
-                
-                setRecetaOpcion(opcionesRecetas)
-                console.log('Opciones generadas:', opcionesRecetas.length);
+            const PROMPT = input + Prompt.GENERAR_RECETA_OPCION_PROMPT;
+            const recetas = await GenerarIAReceta(PROMPT);
+            if (Array.isArray(recetas)) {
+                setRecetaOpcion(recetas);
+            } else {
+                setRecetaOpcion([]);
             }
-            
         } catch (e) {
-            console.log('Error al generar opciones:', e);
+            setRecetaOpcion([]);
         } finally {
-            setLoading(false)
+            setLoading(false);
         }
     }
 
+    // ...existing code...
     return (
         <View style={{
             paddingTop: Platform.OS == 'ios' ? 40 : 30,

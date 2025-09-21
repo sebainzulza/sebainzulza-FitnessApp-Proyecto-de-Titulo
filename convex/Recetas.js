@@ -5,14 +5,12 @@ export const CrearNuevaReceta = mutation({
     args: {
         jsonData: v.any(),
         uid: v.id('Users'),
-        imagenUrl: v.string(),
         recetaNombre: v.string()
     },
     handler: async (ctx, args) => {
         const result = await ctx.db.insert('recetas', {
             jsonData: args.jsonData,
             uid: args.uid,
-            imagenUrl: args.imagenUrl,
             recetaNombre: args.recetaNombre
         });
         return result;

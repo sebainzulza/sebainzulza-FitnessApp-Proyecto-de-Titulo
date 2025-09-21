@@ -4,7 +4,7 @@ import axios from "axios";
 const callOpenRouterAI = async ({ PROMPT, model = 'google/gemma-3n-e2b-it:free', response_format }) => {
     const API_KEY = process.env.EXPO_PUBLIC_OPENROUTER_API_KEY;
     if (!API_KEY) {
-        throw new Error('EXPO_PUBLIC_OPENROUTER_API_KEY no está definida.');
+        throw new Error('EXPO_PUBLIC_OPENROUTER_API_KEY no está definida. Añádela en app.json o usa un backend para la clave.');
     }
 
     const payload = {
@@ -35,6 +35,17 @@ const callOpenRouterAI = async ({ PROMPT, model = 'google/gemma-3n-e2b-it:free',
         throw new Error(`OpenRouter error ${res.status}: ${JSON.stringify(errDetail)}`);
     }
 
+    const RespIA = json?.choices?.[0]?.message?.content || json?.choices?.[0]?.text || json?.output?.[0]?.content || null;
+
+    if (RespIA && typeof RespIA === 'string') {
+        try {
+            const JSONContent = JSON.parse(RespIA.replace('```json', '').replace(/```/g, '').trim());
+            console.log(JSONContent);
+            return JSONContent;
+        } catch (err) {
+            console.warn('No se pudo parsear JSON desde la respuesta IA:', err.message);
+        }
+    }
     return json;
 };
 
@@ -48,19 +59,3 @@ const OPENROUTER_URL = 'https://openrouter.ai/api/v1/chat/completions'
 export const CrearPlanIA = async (PROMPT) => {
     return await callOpenRouterAI({ PROMPT });
 };
-
-const BASE_URL='https://aigurulab.tech';
-export const GenerarImagenReceta=async(prompt) => await axios.post(BASE_URL+'/api/generate-image',
-        {
-            width: 1024,
-            height: 1024,
-            input: prompt,
-            model: 'sdxl',
-            aspectRatio:"1:1"
-        },
-        {
-            headers: {
-                'x-api-key': process.env.EXPO_PUBLIC_AIGURU_LAB_API_KEY,
-                'Content-Type': 'application/json',
-            },
-        })
