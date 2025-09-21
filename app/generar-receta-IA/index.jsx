@@ -8,12 +8,11 @@ import ListaRecetaOpciones from '../../components/ListaRecetaOpciones'
 
 export default function GenerarRecetaIA() {
 
-    const [input, setInput]=useState()
-    const [loading, setLoading]=useState(false)
-        const [recetaOpcion, setRecetaOpcion]=useState([])
-    const GenerarRecetaOpciones=async()=>{
+    const [input, setInput] = useState();
+    const [loading, setLoading] = useState(false);
+    const [recetaOpcion, setRecetaOpcion] = useState([]);
+    const GenerarRecetaOpciones = async () => {
         setLoading(true);
-        
         try {
             const PROMPT = input + Prompt.GENERAR_RECETA_OPCION_PROMPT;
             const recetas = await GenerarIAReceta(PROMPT);
@@ -21,15 +20,16 @@ export default function GenerarRecetaIA() {
                 setRecetaOpcion(recetas);
             } else {
                 setRecetaOpcion([]);
+                alert('La respuesta de la IA no es válida.');
             }
         } catch (e) {
             setRecetaOpcion([]);
+            alert('Error al generar receta: ' + (e?.message || e));
         } finally {
             setLoading(false);
         }
     }
 
-    // ...existing code...
     return (
         <View style={{
             paddingTop: Platform.OS == 'ios' ? 40 : 30,

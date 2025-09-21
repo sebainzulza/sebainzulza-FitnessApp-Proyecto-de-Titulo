@@ -1,12 +1,34 @@
-import { View, Text } from 'react-native'
-import React, { useState } from 'react'
+import { View, Text, FlatList } from 'react-native'
+import React, { useContext, useEffect, useState } from 'react'
 import { HugeiconsIcon } from '@hugeicons/react-native';
 import { Calendar03Icon } from '@hugeicons/core-free-icons';
 import Colors from '../shared/Colors';
 import Button from './shared/Button';
+import { useConvex } from 'convex/react';
+import { api } from '../convex/_generated/api';
+import moment from 'moment';
+import { UserContext } from '../context/UserContext';
+import PlanAlimenticioCard from './PlanAlimenticioCard';
 
 export default function PlanComidaDiario() {
     const [planComida, setPlanComida] = useState();
+    const {user} = useContext(UserContext);
+    const convex = useConvex();
+
+    useEffect(()=>{
+        user && GetPlanComidaHoy();
+    },[user])
+
+    const GetPlanComidaHoy = async () => {
+        const result = await convex.query(api.PlanAlimenticio.GetPlanAlimenticioHoy,{
+            fecha:moment().format('DD/MM/YYYY'),
+            uid:user?._id
+        });
+        console.log(result);
+
+        setPlanComida(result);
+    }
+
     return (
         <View style={{
             marginTop: 15
@@ -17,7 +39,7 @@ export default function PlanComidaDiario() {
             }}>Plan de Comida diario</Text>
 
 
-            {!planComida && 
+            {!planComida ? 
                 <View style={{
                     display: 'flex',
                     alignItems: 'center',
@@ -34,6 +56,14 @@ export default function PlanComidaDiario() {
                     }}>No tienes ningun plan por hoy</Text>
 
                     <Button title={'Crear Plan de Comida'}/>
+                </View>
+                :<View>
+                    <FlatList
+                        data={planComida}
+                        renderItem={({item})=>(
+                            <PlanAlimenticioCard planAlimenticioInfo={item} refreshData={GetPlanComidaHoy}/>
+                        )}
+                    />
                 </View>
             }
         </View>

@@ -1,4 +1,5 @@
 import { View, Text, FlatList, TouchableOpacity, Alert } from 'react-native'
+import { useRouter } from 'expo-router'
 import React, { useContext, useEffect, useState } from 'react'
 import moment from 'moment';
 import Colors from '../shared/Colors';
@@ -16,6 +17,7 @@ export default function AnadirAlPlanActionSheet({recetaDetalle, hideActionSheet}
     const [selectedComida, setSelectedComida] = useState();
     const {user} = useContext(UserContext)
     const CrearPlanAlimenticio = useMutation(api.PlanAlimenticio.CrearPlanAlimenticio)
+    const router = useRouter();
 
     const comidaOpciones = [
         {
@@ -62,7 +64,8 @@ export default function AnadirAlPlanActionSheet({recetaDetalle, hideActionSheet}
         console.log(result)
 
         Alert.alert("Añadido!","Receta añadida al plan alimenticio");
-        hideActionSheet()
+        hideActionSheet();
+        router.push('/(tabs)/Home');
     }
 
     return (

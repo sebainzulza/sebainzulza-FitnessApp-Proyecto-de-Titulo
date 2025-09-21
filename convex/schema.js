@@ -28,6 +28,7 @@ export default defineSchema({
         recetaId: v.id('recetas'),
         fecha: v.string(),
         comidaTipo: v.string(),
-        uid: v.id('Users')
+        uid: v.id('Users'),
+        status: v.optional(v.boolean())
     })
 })
