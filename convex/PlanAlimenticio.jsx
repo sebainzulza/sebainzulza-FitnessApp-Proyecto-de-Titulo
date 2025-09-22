@@ -53,11 +53,49 @@ export const GetPlanAlimenticioHoy = query({
 export const actualizarStatus = mutation({
     args: {
         id: v.id('planAlimenticio'),
-        status: v.boolean()
+        status: v.boolean(),
+        calorias: v.number(),
+        proteinas: v.number(),
+        carbohidratos: v.number(),
+        grasas: v.number(),
     },
     handler: async (ctx, args) => {
         const result = await ctx.db.patch(args.id, {
-            status: args.status
+            status: args.status,
+            calorias: args.calorias,
+            proteinas: args.proteinas,
+            carbohidratos: args.carbohidratos,
+            grasas: args.grasas
         });
+    }
+})
+
+export const GetTotalCaloriasConsumidas = query({
+    args: {
+        fecha:v.string(),
+        uid: v.id('Users') 
+    },
+    handler: async (ctx, args) => {
+        const planAlimenticioResult = await ctx.db.query('planAlimenticio')
+            .filter(q =>
+                q.and(
+                    q.eq(q.field('uid'), args.uid),
+                    q.eq(q.field('fecha'), args.fecha),
+                    q.eq(q.field('status'), true)
+                )
+            )
+            .collect();
+
+        const totalCalorias = planAlimenticioResult.reduce((sum, comida) => sum + (comida.calorias ?? 0), 0);
+        const totalProteinas = planAlimenticioResult.reduce((sum, comida) => sum + (comida.proteinas ?? 0), 0);
+        const totalCarbohidratos = planAlimenticioResult.reduce((sum, comida) => sum + (comida.carbohidratos ?? 0), 0);
+        const totalGrasas = planAlimenticioResult.reduce((sum, comida) => sum + (comida.grasas ?? 0), 0);
+
+        return {
+            calorias: totalCalorias,
+            proteinas: totalProteinas,
+            carbohidratos: totalCarbohidratos,
+            grasas: totalGrasas
+        };
     }
 })

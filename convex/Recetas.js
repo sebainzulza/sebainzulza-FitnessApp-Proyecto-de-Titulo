@@ -26,3 +26,10 @@ export const GetRecetaById = query({
         return result;
     }
 })
+
+export const GetTodasLasRecetas = query({
+    handler: async(ctx,args) =>{
+        const result = await ctx.db.query('recetas').collect();
+        return result
+    }
+})

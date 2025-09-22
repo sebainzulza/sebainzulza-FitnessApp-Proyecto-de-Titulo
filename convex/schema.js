@@ -19,16 +19,22 @@ export default defineSchema({
         carbohidratos: v.optional(v.number()),
         grasas: v.optional(v.number())
     }),
+
     recetas: defineTable({
         jsonData: v.any(),
         uid: v.id('Users'),
         recetaNombre: v.any()
     }),
+
     planAlimenticio: defineTable({
         recetaId: v.id('recetas'),
         fecha: v.string(),
         comidaTipo: v.string(),
         uid: v.id('Users'),
-        status: v.optional(v.boolean())
+        status: v.optional(v.boolean()),
+        calorias:v.optional(v.number()),
+        proteinas:v.optional(v.number()),
+        carbohidratos:v.optional(v.number()),
+        grasas:v.optional(v.number())
     })
 })

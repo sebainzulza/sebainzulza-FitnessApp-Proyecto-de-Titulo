@@ -1,24 +1,29 @@
 import { View, Text, TouchableOpacity, Alert } from 'react-native'
-import React from 'react'
+import React, { useContext } from 'react'
 import { StyleSheet } from 'react-native'
 import Colors from '../shared/Colors'
 import { HugeiconsIcon } from '@hugeicons/react-native';
 import { SquareIcon, CheckmarkSquare02Icon } from '@hugeicons/core-free-icons';
 import { useMutation } from 'convex/react';
 import { api } from '../convex/_generated/api';
+import { RefreshDataContext } from '../context/RefreshDataContext';
 
-export default function PlanAlimenticioCard({ planAlimenticioInfo , refreshData}) {
+export default function PlanAlimenticioCard({ planAlimenticioInfo}) {
 
     const actualizarStatus = useMutation(api.PlanAlimenticio.actualizarStatus);
-
+    const {refreshData, setRefreshData} = useContext(RefreshDataContext);
     const onCheck = async (status) => {
         const result = await actualizarStatus({
             id: planAlimenticioInfo?.planAlimenticio?._id,
-            status: status
+            status: status,
+            calorias:Number(planAlimenticioInfo?.receta?.jsonData?.calorias),
+            proteinas: Number(planAlimenticioInfo?.receta?.jsonData?.proteinas),
+            carbohidratos: Number(planAlimenticioInfo?.receta?.jsonData?.carbohidratos),
+            grasas: Number(planAlimenticioInfo?.receta?.jsonData?.grasas),
         });
 
         Alert.alert('Genial!', 'Has actualizado el estado de la comida.')
-        refreshData()
+        setRefreshData(Date.now());
     }
 
     return (
