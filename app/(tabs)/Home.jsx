@@ -11,6 +11,7 @@ export default function Home() {
   const { user } = useContext(UserContext)
   const router = useRouter()
   useEffect(() => {
+    if (!user) return;
     if (!user?.peso) {
       router.replace('/preferance')
     }

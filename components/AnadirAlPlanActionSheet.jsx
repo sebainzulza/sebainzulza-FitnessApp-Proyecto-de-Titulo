@@ -1,7 +1,6 @@
 import { View, Text, FlatList, TouchableOpacity, Alert } from 'react-native'
 import { useRouter } from 'expo-router'
-import React, { useContext, useEffect, useState } from 'react'
-import moment from 'moment';
+import React, { useContext, useState } from 'react'
 import Colors from '../shared/Colors';
 import { HugeiconsIcon } from '@hugeicons/react-native';
 import { Sun03FreeIcons, SunriseFreeIcons, SunsetFreeIcons } from '@hugeicons/core-free-icons';
@@ -9,10 +8,10 @@ import Button from './shared/Button';
 import { useMutation } from 'convex/react';
 import { api } from '../convex/_generated/api';
 import { UserContext } from './../context/UserContext';
+import SeleccionFechaCard from './SeleccionFechaCard';
 
 export default function AnadirAlPlanActionSheet({recetaDetalle, hideActionSheet}) {
 
-    const [fechaList, setFechaList] = useState([]);
     const [selectedFecha, setSelectedFecha] = useState();
     const [selectedComida, setSelectedComida] = useState();
     const {user} = useContext(UserContext)
@@ -33,19 +32,6 @@ export default function AnadirAlPlanActionSheet({recetaDetalle, hideActionSheet}
             icon: SunsetFreeIcons
         },
     ];
-    useEffect(() => {
-        GenerarFechas();
-    }, [])
-
-    const GenerarFechas = () => {
-        const resultado = [];
-        for (let i = 0; i < 4; i++) {
-            const siguienteFecha = moment().add(i, 'days').format('DD/MM/YYYY');
-            resultado.push(siguienteFecha);
-        }
-        console.log("Fechas generadas:", resultado);
-        setFechaList(resultado);
-    }
 
     const AnadirAlPlanAlimenticio = async()=>{
         if(!selectedFecha&&!selectedComida)
@@ -78,42 +64,8 @@ export default function AnadirAlPlanActionSheet({recetaDetalle, hideActionSheet}
                 textAlign: 'center'
             }}>Añadir al Plan</Text>
 
-            <Text style={{
-                fontSize: 18,
-                fontWeight: 'bold',
-                marginTop: 15
-            }}>Selecciona una fecha</Text>
-            <FlatList
-                data={fechaList}
-                numColumns={4}
-                renderItem={({ item, index }) => (
-                    <TouchableOpacity
-                        onPress={() => setSelectedFecha(item)}
-                        style={{
-                            flex: 1,
-                            display: 'flex',
-                            alignItems: 'center',
-                            padding: 7,
-                            borderWidth: 1,
-                            borderRadius: 10,
-                            margin: 5,
-                            backgroundColor: selectedFecha == item ? Colors.SECONDARY : Colors.WHITE,
-                            borderColor: selectedFecha == item ? Colors.PRIMARY : Colors.GRAY
-                        }}>
-                        <Text style={{
-                            fontSize: 18,
-                            fontWeight: '500'
-                        }}>{moment(item, 'DD/MM/YYYY').format('ddd')}</Text>
-                        <Text style={{
-                            fontSize: 20,
-                            fontWeight: 'bold'
-                        }}>{moment(item, 'DD/MM/YYYY').format('DD')}</Text>
-                        <Text style={{
-                            fontSize: 16
-                        }}>{moment(item, 'DD/MM/YYYY').format('MMM')}</Text>
-                    </TouchableOpacity>
-                )}
-            />
+            <SeleccionFechaCard setSelectedFecha={setSelectedFecha}/>
+            
             <Text style={{
                 fontSize: 20,
                 fontWeight: 'bold',

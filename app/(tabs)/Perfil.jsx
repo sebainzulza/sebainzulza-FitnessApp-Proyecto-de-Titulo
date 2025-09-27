@@ -1,10 +1,124 @@
-import { View, Text } from 'react-native'
-import React from 'react'
+import { View, Text, Platform, Image, FlatList, TouchableOpacity } from 'react-native'
+import React, { useContext } from 'react'
+import { UserContext } from '../../context/UserContext'
+import Colors from './../../shared/Colors';
+import { HugeiconsIcon } from '@hugeicons/react-native';
+import { Configuration01Icon, LogoutSquare02Icon, SecurityLockIcon, MessageQuestionIcon, Pen01Icon, JusticeScale02Icon } from '@hugeicons/core-free-icons';
+import { auth } from './../../services/FirebaseConfig'
+import { signOut } from 'firebase/auth';
+import { useRouter } from 'expo-router';
 
-export default function Profile() {
+const MenuOpciones = [
+  {
+    titulo: 'Editar Datos',
+    icono: Pen01Icon,
+    ruta: 'MisDatos'
+  },
+  {
+    titulo: 'Configuración',
+    icono: Configuration01Icon,
+    ruta: 'MisDatos',
+    comment: 'agregar despues una configuracion avanzada para poder eliminar la cuenta'
+  },
+  {
+    titulo: 'Seguridad y Privacidad',
+    icono: SecurityLockIcon,
+    ruta: 'MisDatos'
+  },
+  {
+    titulo: 'Ayuda',
+    icono: MessageQuestionIcon,
+    ruta: 'MisDatos'
+  },
+  {
+    titulo: 'Legal y Privacidad',
+    icono: JusticeScale02Icon,
+    ruta: 'MisDatos'
+  },
+  {
+    titulo: 'Cerrar Sesión',
+    icono: LogoutSquare02Icon,
+    ruta: 'logout'
+  }
+]
+
+export default function Perfil() {
+  const { user, setUser } = useContext(UserContext)
+  const router = useRouter();
+  const OnMenuOptionClick=(menu)=>{
+    if (menu.ruta=='logout')
+      {
+        signOut(auth).then(()=>{
+          console.log('Sesión cerrada');
+          setUser(null);
+          router.replace('/');
+        })
+      return;
+      }
+      router.push(menu?.ruta)
+  }
   return (
-    <View>
-      <Text>Profile</Text>
+    <View style={{
+      padding: 20,
+      paddingTop: Platform.OS == 'ios' ? 40 : 25
+    }}>
+      <Text style={{
+        fontSize: 25,
+        fontWeight: 'bold'
+      }}>Perfil</Text>
+
+      <View style={{
+        display: 'flex',
+        alignItems: 'center',
+        marginTop: 15
+      }}>
+        <Image source={require('./../../assets/images/user.png')}
+          style={{
+            width: 100,
+            height: 100,
+            borderRadius: 99
+          }}
+        />
+        <Text style={{
+          fontSize: 20,
+          fontWeight: 'bold',
+          marginTop: 5
+        }}>{user?.name}</Text>
+        <Text style={{
+          fontSize: 17,
+          color: Colors.GRAY,
+          marginTop: 5
+        }}>{user?.email}</Text>
+      </View>
+
+      <FlatList
+        data={MenuOpciones}
+        style={{
+          marginTop: 20
+        }}
+        renderItem={({ item, index }) => (
+          <TouchableOpacity
+          onPress={()=>OnMenuOptionClick(item)}
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            gap: 6,
+            alignItems: 'center',
+            padding: 15,
+            borderWidth: 0.2,
+            marginTop: 5,
+            borderRadius: 15,
+            backgroundColor: Colors.WHITE,
+            elevation: 1
+          }}>
+            <HugeiconsIcon icon={item.icono} size={35} color={Colors.PRIMARY}/>
+            <Text style={{
+              fontSize:20,
+              fontWeight: '300'
+            }}>{item.titulo}</Text>
+          </TouchableOpacity>
+        )}
+      />
     </View>
   )
 }
