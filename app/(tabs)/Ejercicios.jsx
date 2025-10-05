@@ -5,6 +5,7 @@ export default function Ejercicios() {
   return (
     <View>
       <Text>Ejercicios</Text>
+      <Text>hola</Text>
     </View>
   )
 }

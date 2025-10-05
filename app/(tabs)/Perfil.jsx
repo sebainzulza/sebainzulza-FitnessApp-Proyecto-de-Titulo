@@ -33,7 +33,7 @@ const MenuOpciones = [
   {
     titulo: 'Legal y Privacidad',
     icono: JusticeScale02Icon,
-    ruta: 'MisDatos'
+    ruta: '/LegalPrivacidad'
   },
   {
     titulo: 'Cerrar Sesión',
