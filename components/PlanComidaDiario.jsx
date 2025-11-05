@@ -11,7 +11,7 @@ import { UserContext } from '../context/UserContext';
 import PlanAlimenticioCard from './PlanAlimenticioCard';
 import { RefreshDataContext } from '../context/RefreshDataContext';
 
-export default function PlanComidaDiario(selectedFecha=null) {
+export default function PlanComidaDiario({selectedFecha = null}) {
     const [planComida, setPlanComida] = useState();
     const {user} = useContext(UserContext);
     const convex = useConvex();
@@ -22,11 +22,14 @@ export default function PlanComidaDiario(selectedFecha=null) {
     },[user,refreshData])
 
     const GetPlanComidaHoy = async () => {
+        const fechaAUsar = selectedFecha || moment().format('DD/MM/YYYY');
+        console.log("Obteniendo plan para fecha:", fechaAUsar, "Usuario:", user?._id);
+        
         const result = await convex.query(api.PlanAlimenticio.GetPlanAlimenticioHoy,{
-            fecha: selectedFecha ?? moment().format('DD/MM/YYYY'),
-            uid:user?._id
+            fecha: fechaAUsar,
+            uid: user?._id
         });
-        console.log(result);
+        console.log("Plan alimenticio obtenido:", result);
 
         setPlanComida(result);
     }

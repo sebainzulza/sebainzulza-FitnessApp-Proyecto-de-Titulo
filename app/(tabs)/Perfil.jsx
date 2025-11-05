@@ -3,7 +3,7 @@ import React, { useContext } from 'react'
 import { UserContext } from '../../context/UserContext'
 import Colors from './../../shared/Colors';
 import { HugeiconsIcon } from '@hugeicons/react-native';
-import { Configuration01Icon, LogoutSquare02Icon, SecurityLockIcon, MessageQuestionIcon, Pen01Icon, JusticeScale02Icon } from '@hugeicons/core-free-icons';
+import { Configuration01Icon, LogoutSquare02Icon, SecurityLockIcon, MessageQuestionIcon, Pen01Icon, JusticeScale02Icon, TrashDelete01Icon } from '@hugeicons/core-free-icons';
 import { auth } from './../../services/FirebaseConfig'
 import { signOut } from 'firebase/auth';
 import { useRouter } from 'expo-router';
@@ -15,10 +15,14 @@ const MenuOpciones = [
     ruta: 'MisDatos'
   },
   {
+    titulo: 'Términos y Condiciones',
+    icono: JusticeScale02Icon,
+    ruta: '/terminos-condiciones'
+  },
+  {
     titulo: 'Configuración',
     icono: Configuration01Icon,
-    ruta: 'MisDatos',
-    comment: 'agregar despues una configuracion avanzada para poder eliminar la cuenta'
+    ruta: 'MisDatos'
   },
   {
     titulo: 'Seguridad y Privacidad',
@@ -33,7 +37,13 @@ const MenuOpciones = [
   {
     titulo: 'Legal y Privacidad',
     icono: JusticeScale02Icon,
-    ruta: 'MisDatos'
+    ruta: '/legal-privacidad'
+  },
+  {
+    titulo: 'Eliminar Cuenta',
+    icono: TrashDelete01Icon,
+    ruta: '/eliminar-cuenta',
+    color: '#FF6B6B'
   },
   {
     titulo: 'Cerrar Sesión',
@@ -45,6 +55,9 @@ const MenuOpciones = [
 export default function Perfil() {
   const { user, setUser } = useContext(UserContext)
   const router = useRouter();
+  
+  
+
   const OnMenuOptionClick=(menu)=>{
     if (menu.ruta=='logout')
       {
@@ -57,6 +70,8 @@ export default function Perfil() {
       }
       router.push(menu?.ruta)
   }
+
+  
   return (
     <View style={{
       padding: 20,
@@ -96,6 +111,7 @@ export default function Perfil() {
         style={{
           marginTop: 20
         }}
+        keyExtractor={(item, index) => index.toString()}
         renderItem={({ item, index }) => (
           <TouchableOpacity
           onPress={()=>OnMenuOptionClick(item)}
@@ -111,14 +127,21 @@ export default function Perfil() {
             backgroundColor: Colors.WHITE,
             elevation: 1
           }}>
-            <HugeiconsIcon icon={item.icono} size={35} color={Colors.PRIMARY}/>
+            {item.icono ? (
+              <HugeiconsIcon icon={item.icono} size={35} color={item.color || Colors.PRIMARY}/>
+            ) : (
+              <View style={{width: 35, height: 35}} />
+            )}
             <Text style={{
               fontSize:20,
-              fontWeight: '300'
+              fontWeight: '300',
+              color: item.color || 'black'
             }}>{item.titulo}</Text>
           </TouchableOpacity>
         )}
       />
+
+  {/* Eliminada: la funcionalidad de eliminar cuenta fue removida */}
     </View>
   )
 }

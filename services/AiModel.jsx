@@ -1,5 +1,7 @@
 import axios from "axios";
 
+const OPENROUTER_URL = 'https://openrouter.ai/api/v1/chat/completions'
+
 // Función base para llamar a la IA
 const callOpenRouterAI = async ({ PROMPT, model = 'google/gemma-3n-e2b-it:free', response_format }) => {
     const API_KEY = process.env.EXPO_PUBLIC_OPENROUTER_API_KEY;
@@ -53,8 +55,6 @@ const callOpenRouterAI = async ({ PROMPT, model = 'google/gemma-3n-e2b-it:free',
 export const GenerarIAReceta = async (PROMPT) => {
     return await callOpenRouterAI({ PROMPT, response_format: 'json_object' });
 };
-
-const OPENROUTER_URL = 'https://openrouter.ai/api/v1/chat/completions'
 
 export const CrearPlanIA = async (PROMPT) => {
     return await callOpenRouterAI({ PROMPT });

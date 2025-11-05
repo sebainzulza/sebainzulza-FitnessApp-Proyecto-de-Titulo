@@ -8,6 +8,8 @@ export default defineSchema({
         picture: v.optional(v.string()),
         subscriptionId: v.optional(v.string()),
         credits: v.optional(v.number()),
+        acceptedTermsAt: v.optional(v.number()),
+        aiDisclaimerAcknowledgedAt: v.optional(v.number()),
         altura: v.optional(v.string()),
         peso: v.optional(v.string()),
         genero: v.optional(v.string()),

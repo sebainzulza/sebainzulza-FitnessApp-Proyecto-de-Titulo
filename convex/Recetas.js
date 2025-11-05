@@ -33,3 +33,15 @@ export const GetTodasLasRecetas = query({
         return result
     }
 })
+
+export const GetRecetasPorUsuario = query({
+    args: {
+        uid: v.id('Users')
+    },
+    handler: async(ctx, args) =>{
+        const result = await ctx.db.query('recetas')
+            .filter((q) => q.eq(q.field('uid'), args.uid))
+            .collect();
+        return result
+    }
+})

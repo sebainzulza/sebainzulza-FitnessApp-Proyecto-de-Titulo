@@ -8,6 +8,7 @@ import Button from './shared/Button';
 import { useMutation } from 'convex/react';
 import { api } from '../convex/_generated/api';
 import { UserContext } from './../context/UserContext';
+import { RefreshDataContext } from './../context/RefreshDataContext';
 import SeleccionFechaCard from './SeleccionFechaCard';
 
 export default function AnadirAlPlanActionSheet({recetaDetalle, hideActionSheet}) {
@@ -15,6 +16,7 @@ export default function AnadirAlPlanActionSheet({recetaDetalle, hideActionSheet}
     const [selectedFecha, setSelectedFecha] = useState();
     const [selectedComida, setSelectedComida] = useState();
     const {user} = useContext(UserContext)
+    const {refreshData, setRefreshData} = useContext(RefreshDataContext)
     const CrearPlanAlimenticio = useMutation(api.PlanAlimenticio.CrearPlanAlimenticio)
     const router = useRouter();
 
@@ -34,24 +36,32 @@ export default function AnadirAlPlanActionSheet({recetaDetalle, hideActionSheet}
     ];
 
     const AnadirAlPlanAlimenticio = async()=>{
-        if(!selectedFecha&&!selectedComida)
+        if(!selectedFecha || !selectedComida)
         {
             Alert.alert("Error","Por favor selecciona una fecha y un tipo de comida");
             return;
         }
 
-        const result = await CrearPlanAlimenticio({
-            fecha: selectedFecha,
-            comidaTipo: selectedComida,
-            recetaId: recetaDetalle?._id,
-            uid: user?._id
-        })
+        try {
+            const result = await CrearPlanAlimenticio({
+                fecha: selectedFecha,
+                comidaTipo: selectedComida,
+                recetaId: recetaDetalle?._id,
+                uid: user?._id
+            })
 
-        console.log(result)
+            console.log("Plan alimenticio creado:", result)
 
-        Alert.alert("Añadido!","Receta añadida al plan alimenticio");
-        hideActionSheet();
-        router.push('/(tabs)/Home');
+            // Actualizar el contexto para refrescar los datos
+            setRefreshData(Date.now())
+            
+            Alert.alert("Añadido!","Receta añadida al plan alimenticio");
+            hideActionSheet();
+            router.push('/(tabs)/Home');
+        } catch (error) {
+            console.error("Error al añadir al plan:", error)
+            Alert.alert("Error","No se pudo añadir la receta al plan alimenticio");
+        }
     }
 
     return (
@@ -85,8 +95,8 @@ export default function AnadirAlPlanActionSheet({recetaDetalle, hideActionSheet}
                             borderWidth: 1,
                             borderRadius: 10,
                             margin: 5,
-                            backgroundColor: selectedComida == item.title ? Colors.SECONDARY : Colors.WHITE,
-                            borderColor: selectedComida == item.title ? Colors.PRIMARY : Colors.GRAY
+                            backgroundColor: selectedComida === item.title ? Colors.SECONDARY : Colors.WHITE,
+                            borderColor: selectedComida === item.title ? Colors.PRIMARY : Colors.GRAY
                         }}>
                         <HugeiconsIcon icon={item.icon} />
                         <Text style={{

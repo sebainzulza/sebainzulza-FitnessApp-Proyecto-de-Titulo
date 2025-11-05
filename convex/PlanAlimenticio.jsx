@@ -99,3 +99,13 @@ export const GetTotalCaloriasConsumidas = query({
         };
     }
 })
+
+export const EliminarPlanAlimenticio = mutation({
+    args: {
+        id: v.id('planAlimenticio')
+    },
+    handler: async (ctx, args) => {
+        await ctx.db.delete(args.id);
+        return { success: true };
+    }
+})

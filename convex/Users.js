@@ -18,11 +18,12 @@ export const CreateNewUser = mutation({
                 email: args.email,
                 credits: 10
             };
-            const result = await ctx.db.insert('Users', {
+            const insertedId = await ctx.db.insert('Users', {
                 ...data
             });
 
-            return data;
+            // Return the document shape expected by the client, including _id
+            return { _id: insertedId, ...data };
         }
         return user[0];
     }
@@ -70,5 +71,51 @@ export const UpdateUserPref=mutation({
         });
 
         return result;
+    }
+})
+
+export const UpdateUserConsent = mutation({
+    args: {
+        uid: v.id('Users'),
+        acceptedTermsAt: v.optional(v.number()),
+        aiDisclaimerAcknowledgedAt: v.optional(v.number())
+    },
+    handler: async (ctx, args) => {
+        const { uid, acceptedTermsAt, aiDisclaimerAcknowledgedAt } = args;
+        const result = await ctx.db.patch(uid, {
+            ...(acceptedTermsAt !== undefined ? { acceptedTermsAt } : {}),
+            ...(aiDisclaimerAcknowledgedAt !== undefined ? { aiDisclaimerAcknowledgedAt } : {}),
+        });
+        return result;
+    }
+})
+
+export const DeleteUser = mutation({
+    args: {
+        uid: v.id('Users')
+    },
+    handler: async (ctx, args) => {
+        // Eliminar todos los planes alimenticios asociados al usuario
+        const planesAlimenticios = await ctx.db.query('planAlimenticio')
+            .filter(q => q.eq(q.field('uid'), args.uid))
+            .collect();
+        
+        for (const plan of planesAlimenticios) {
+            await ctx.db.delete(plan._id);
+        }
+
+        // Eliminar todas las recetas asociadas al usuario
+        const recetas = await ctx.db.query('recetas')
+            .filter(q => q.eq(q.field('uid'), args.uid))
+            .collect();
+        
+        for (const receta of recetas) {
+            await ctx.db.delete(receta._id);
+        }
+
+        // Finalmente, eliminar el usuario
+        await ctx.db.delete(args.uid);
+        
+        return { success: true };
     }
 })

@@ -40,8 +40,8 @@ export default function SeleccionFechaCard({setSelectedFecha}) {
                             borderWidth: 1,
                             borderRadius: 10,
                             margin: 5,
-                            backgroundColor: selectedFecha_ == item ? Colors.SECONDARY : Colors.WHITE,
-                            borderColor: selectedFecha_ == item ? Colors.PRIMARY : Colors.GRAY
+                            backgroundColor: selectedFecha_ === item ? Colors.SECONDARY : Colors.WHITE,
+                            borderColor: selectedFecha_ === item ? Colors.PRIMARY : Colors.GRAY
                         }}>
                         <Text style={{
                             fontSize: 18,

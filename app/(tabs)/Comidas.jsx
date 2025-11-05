@@ -1,14 +1,19 @@
 import { View, Text, Platform, FlatList } from 'react-native'
-import React, { use } from 'react'
+import React, { useContext } from 'react'
 import GenerarRecetaCard from '../../components/GenerarRecetaCard'
 import { useQuery } from 'convex/react'
 import { api } from '../../convex/_generated/api'
 import RecetasCard from '../../components/RecetasCard'
+import { UserContext } from '../../context/UserContext'
 
 export default function Comidas() {
 
-  const recetasLista = useQuery(api.Recetas.GetTodasLasRecetas)
-  console.log(recetasLista)
+  const { user } = useContext(UserContext)
+  const recetasLista = useQuery(
+    api.Recetas.GetRecetasPorUsuario, 
+    user?._id ? { uid: user._id } : "skip"
+  )
+  console.log('Comidas: recetasLista', recetasLista)
 
   return (
     <FlatList
@@ -28,8 +33,9 @@ export default function Comidas() {
 
           <View>
             <FlatList
-              data={recetasLista}
+              data={recetasLista ?? []}
               numColumns={2}
+              keyExtractor={(item, idx) => item?._id?.toString() || idx.toString()}
               renderItem={({ item }) => (
                 <RecetasCard receta={item} />
               )}

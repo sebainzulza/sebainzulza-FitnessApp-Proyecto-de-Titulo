@@ -11,7 +11,9 @@ import { RefreshDataContext } from '../context/RefreshDataContext';
 export default function PlanAlimenticioCard({ planAlimenticioInfo}) {
 
     const actualizarStatus = useMutation(api.PlanAlimenticio.actualizarStatus);
+    const eliminarPlan = useMutation(api.PlanAlimenticio.EliminarPlanAlimenticio);
     const {refreshData, setRefreshData} = useContext(RefreshDataContext);
+    
     const onCheck = async (status) => {
         const result = await actualizarStatus({
             id: planAlimenticioInfo?.planAlimenticio?._id,
@@ -26,15 +28,46 @@ export default function PlanAlimenticioCard({ planAlimenticioInfo}) {
         setRefreshData(Date.now());
     }
 
+    const onPressCard = () => {
+        Alert.alert(
+            '¿Eliminar receta?',
+            '¿Deseas eliminar esta receta de tu plan alimenticio diario?',
+            [
+                {
+                    text: 'Mantener',
+                    style: 'cancel'
+                },
+                {
+                    text: 'Eliminar',
+                    style: 'destructive',
+                    onPress: async () => {
+                        try {
+                            await eliminarPlan({
+                                id: planAlimenticioInfo?.planAlimenticio?._id
+                            });
+                            setRefreshData(Date.now());
+                            Alert.alert('Eliminado', 'La receta ha sido eliminada de tu plan');
+                        } catch (error) {
+                            console.error('Error al eliminar:', error);
+                            Alert.alert('Error', 'No se pudo eliminar la receta');
+                        }
+                    }
+                }
+            ]
+        );
+    }
+
     return (
-        <View style={{
-            padding: 10,
-            backgroundColor: Colors.WHITE,
-            borderRadius: 15,
-            marginTop: 10,
-            flexDirection: 'row',
-            alignItems: 'center',
-        }}>
+        <TouchableOpacity 
+            onPress={onPressCard}
+            style={{
+                padding: 10,
+                backgroundColor: Colors.WHITE,
+                borderRadius: 15,
+                marginTop: 10,
+                flexDirection: 'row',
+                alignItems: 'center',
+            }}>
             <View style={{ flex: 1 }}>
                 <Text style={styles.tipoComidaText}>{planAlimenticioInfo?.planAlimenticio?.comidaTipo}</Text>
                 <Text style={styles.recetaNombreText}>{planAlimenticioInfo?.receta?.recetaNombre}</Text>
@@ -44,17 +77,23 @@ export default function PlanAlimenticioCard({ planAlimenticioInfo}) {
                 <Text>{planAlimenticioInfo?.receta?.jsonData?.grasas} grs grasas</Text>
             </View>
             <View style={{ justifyContent: 'center', alignItems: 'center', marginLeft: 10 }}>
-                {planAlimenticioInfo?.planAlimenticio?.status != true ?
-                    <TouchableOpacity onPress={() => onCheck(true)}>
+                {planAlimenticioInfo?.planAlimenticio?.status !== true ?
+                    <TouchableOpacity onPress={(e) => {
+                        e.stopPropagation();
+                        onCheck(true);
+                    }}>
                         <HugeiconsIcon icon={SquareIcon} color={Colors.GRAY}/>
                     </TouchableOpacity>
                     :
-                    <TouchableOpacity onPress={() => onCheck(false)}>
+                    <TouchableOpacity onPress={(e) => {
+                        e.stopPropagation();
+                        onCheck(false);
+                    }}>
                         <HugeiconsIcon icon={CheckmarkSquare02Icon} color={Colors.PRIMARY} />
                     </TouchableOpacity>
                 }
             </View>
-        </View>
+        </TouchableOpacity>
     )
 }
 

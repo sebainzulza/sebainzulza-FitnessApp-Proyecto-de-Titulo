@@ -6,10 +6,11 @@ import { HugeiconsIcon } from '@hugeicons/react-native';
 import { MaleSymbolIcon, FemaleSymbolIcon, CircleIcon, WeightScale01Icon, Dumbbell01Icon, PlusSignSquareIcon } from '@hugeicons/core-free-icons';
 import Button from './../../components/shared/Button';
 import { useState } from 'react';
-import { useMutation } from 'convex/react';
+import { useConvex, useMutation } from 'convex/react';
 import { api } from './../../convex/_generated/api';
 import { UserContext } from './../../context/UserContext';
 import { useRouter } from 'expo-router';
+import { auth } from '../../services/FirebaseConfig';
 import Prompt from '../../shared/Prompt';
 import { CrearPlanIA } from '../../services/AiModel';
 
@@ -24,6 +25,7 @@ export default function Preferance() {
     const { user, setUser } = useContext(UserContext)
     const router = useRouter();
     const UpdateUserPref = useMutation(api.Users.UpdateUserPref)
+    const convex = useConvex();
 
     const onContinue = async () => {
         if (!peso || !altura || !genero || !objetivo || !diasEntrenamientoPorSemana|| !edad) {
@@ -53,12 +55,32 @@ export default function Preferance() {
         }
         console.log('Macros IA:', macros);
 
-        // Log del user._id para depuración
-        console.log('user._id:', user?._id);
+        // Asegurar que tenemos uid antes de enviar a Convex
+        let uid = user?._id;
+        if (!uid) {
+            try {
+                const email = auth.currentUser?.email;
+                if (!email) {
+                    Alert.alert('Error', 'No se detectó sesión de usuario. Intenta iniciar sesión nuevamente.');
+                    return;
+                }
+                const userData = await convex.query(api.Users.GetUser, { email });
+                if (!userData?._id) {
+                    Alert.alert('Error', 'No se pudo obtener tu usuario en la base de datos.');
+                    return;
+                }
+                setUser(userData);
+                uid = userData._id;
+            } catch (e) {
+                console.error('Error obteniendo usuario de Convex:', e);
+                Alert.alert('Error', 'No se pudo cargar tu usuario. Intenta nuevamente.');
+                return;
+            }
+        }
 
         try {
             const result = await UpdateUserPref({
-                uid: user._id,
+                uid,
                 altura: String(altura),
                 peso: String(peso),
                 genero: String(genero),
