@@ -45,3 +45,13 @@ export const GetRecetasPorUsuario = query({
         return result
     }
 })
+
+export const EliminarReceta = mutation({
+    args: {
+        id: v.id('recetas')
+    },
+    handler: async (ctx, args) => {
+        await ctx.db.delete(args.id);
+        return { success: true };
+    }
+})

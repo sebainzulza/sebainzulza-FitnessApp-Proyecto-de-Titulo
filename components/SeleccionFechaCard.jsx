@@ -1,12 +1,15 @@
 import { View, Text, FlatList, TouchableOpacity } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import moment from 'moment';
+import 'moment/locale/es';
 import Colors from './../shared/Colors'
 
 export default function SeleccionFechaCard({setSelectedFecha}) {
     const [fechaList, setFechaList] = useState([]);
     const [selectedFecha_, setSelectedFecha_] = useState();
+    
     useEffect(() => {
+        moment.locale('es');
         GenerarFechas();
     }, [])
 

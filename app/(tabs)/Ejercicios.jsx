@@ -1,4 +1,4 @@
-import { View, Text, FlatList, Platform, ActivityIndicator } from 'react-native'
+import { View, Text, FlatList, Platform, ActivityIndicator, TouchableOpacity } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'expo-router';
 import EjercicioCard from '../../components/EjercicioCard'
@@ -6,6 +6,8 @@ import ParteCuerpoSelector from '../../components/ParteCuerpoSelector'
 import { EjerciciosAPI } from '../../services/EjerciciosAPI'
 import Colors from '../../shared/Colors'
 import { traducirTexto } from '../../shared/Translations'
+import { HugeiconsIcon } from '@hugeicons/react-native'
+import { DumbbellIcon } from '@hugeicons/core-free-icons'
 
 export default function Ejercicios() {
   const [ejercicios, setEjercicios] = useState([])
@@ -101,6 +103,29 @@ export default function Ejercicios() {
       }}>
         Descubre ejercicios para cada parte de tu cuerpo
       </Text>
+
+      <TouchableOpacity
+        onPress={() => router.push('/rutinas')}
+        style={{
+          backgroundColor: Colors.PRIMARY,
+          padding: 15,
+          borderRadius: 12,
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'center',
+          marginBottom: 15,
+          gap: 10
+        }}
+      >
+        <HugeiconsIcon icon={DumbbellIcon} color={Colors.WHITE} size={24} />
+        <Text style={{
+          color: Colors.WHITE,
+          fontSize: 16,
+          fontWeight: 'bold'
+        }}>
+          Mis Rutinas de Ejercicio
+        </Text>
+      </TouchableOpacity>
 
       <ParteCuerpoSelector 
         parteSeleccionada={parteSeleccionada}

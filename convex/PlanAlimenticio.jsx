@@ -109,3 +109,66 @@ export const EliminarPlanAlimenticio = mutation({
         return { success: true };
     }
 })
+
+export const GetEstadisticasAlimenticiasPorPeriodo = query({
+    args: {
+        uid: v.id('Users'),
+        fechaInicio: v.string(),
+        fechaFin: v.string()
+    },
+    handler: async (ctx, args) => {
+        const planesAlimenticios = await ctx.db.query('planAlimenticio')
+            .filter(q => q.eq(q.field('uid'), args.uid))
+            .collect();
+
+        // Filtrar por rango de fechas y solo los completados
+        const planesEnRango = planesAlimenticios.filter(plan => {
+            if (!plan.status) return false; // Solo contar los marcados como completados
+            
+            const [dia, mes, anio] = plan.fecha.split('/');
+            const fechaPlan = new Date(`${anio}-${mes}-${dia}`);
+            const [diaInicio, mesInicio, anioInicio] = args.fechaInicio.split('/');
+            const fechaInicio = new Date(`${anioInicio}-${mesInicio}-${diaInicio}`);
+            const [diaFin, mesFin, anioFin] = args.fechaFin.split('/');
+            const fechaFin = new Date(`${anioFin}-${mesFin}-${diaFin}`);
+            
+            return fechaPlan >= fechaInicio && fechaPlan <= fechaFin;
+        });
+
+        // Agrupar por fecha
+        const porFecha = {};
+        planesEnRango.forEach(plan => {
+            if (!porFecha[plan.fecha]) {
+                porFecha[plan.fecha] = {
+                    calorias: 0,
+                    proteinas: 0,
+                    carbohidratos: 0,
+                    grasas: 0,
+                    comidas: 0
+                };
+            }
+            porFecha[plan.fecha].calorias += plan.calorias || 0;
+            porFecha[plan.fecha].proteinas += plan.proteinas || 0;
+            porFecha[plan.fecha].carbohidratos += plan.carbohidratos || 0;
+            porFecha[plan.fecha].grasas += plan.grasas || 0;
+            porFecha[plan.fecha].comidas += 1;
+        });
+
+        // Calcular totales
+        const totalCalorias = planesEnRango.reduce((sum, p) => sum + (p.calorias || 0), 0);
+        const totalProteinas = planesEnRango.reduce((sum, p) => sum + (p.proteinas || 0), 0);
+        const totalCarbohidratos = planesEnRango.reduce((sum, p) => sum + (p.carbohidratos || 0), 0);
+        const totalGrasas = planesEnRango.reduce((sum, p) => sum + (p.grasas || 0), 0);
+        const totalComidas = planesEnRango.length;
+
+        return {
+            totalCalorias,
+            totalProteinas,
+            totalCarbohidratos,
+            totalGrasas,
+            totalComidas,
+            porFecha,
+            diasConDatos: Object.keys(porFecha).length
+        };
+    }
+})

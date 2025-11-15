@@ -38,5 +38,44 @@ export default defineSchema({
         proteinas:v.optional(v.number()),
         carbohidratos:v.optional(v.number()),
         grasas:v.optional(v.number())
+    }),
+
+    rutinas: defineTable({
+        uid: v.id('Users'),
+        nombreRutina: v.string(),
+        objetivo: v.string(),
+        notas: v.optional(v.string()),
+        ejercicios: v.array(v.object({
+            ejercicioId: v.string(),
+            nombre: v.string(),
+            parteCuerpo: v.string(),
+            equipamiento: v.string(),
+            gifUrl: v.string(),
+            series: v.number(),
+            repeticiones: v.number(),
+            peso: v.number(),
+            descanso: v.number(),
+            orden: v.number()
+        })),
+        favorita: v.optional(v.boolean()),
+        fechaCreacion: v.number(),
+    }),
+
+    historialRutinas: defineTable({
+        uid: v.id('Users'),
+        rutinaId: v.id('rutinas'),
+        fecha: v.string(),
+        duracion: v.number(),
+        ejerciciosRealizados: v.array(v.object({
+            ejercicioId: v.string(),
+            seriesCompletadas: v.array(v.object({
+                serie: v.number(),
+                repeticiones: v.number(),
+                peso: v.number(),
+                completada: v.boolean()
+            }))
+        })),
+        volumenTotal: v.number(),
+        completada: v.boolean()
     })
 })

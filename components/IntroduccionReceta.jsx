@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet } from 'react-native'
 import React from 'react'
 import { HugeiconsIcon } from '@hugeicons/react-native';
-import { PlusSignCircleIcon, FireIcon, Timer01Icon, UserGroupIcon, ChickenThighsIcon } from '@hugeicons/core-free-icons';
+import { FireIcon, Timer01Icon, UserGroupIcon, ChickenThighsIcon } from '@hugeicons/core-free-icons';
 import Colors from '../shared/Colors';
 
 export default function IntroduccionReceta({ recetaDetalle }) {
@@ -9,18 +9,12 @@ export default function IntroduccionReceta({ recetaDetalle }) {
   return (
     <View>
       <View style={{
-        marginTop:15,
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between'
+        marginTop:15
       }}>
         <Text style={{
           fontSize:20,
           fontWeight:'bold'
         }}>{recetaDetalle?.recetaNombre || recetaJson?.recetaNombre}</Text>
-        <HugeiconsIcon icon={PlusSignCircleIcon}
-        size={40}
-        color={Colors.PRIMARY} />
       </View>  
       <Text style={{
         fontSize: 16,

@@ -13,18 +13,19 @@ const Prompt = {
         'Responde únicamente con el JSON puro y nada más. No añadas explicaciones, ni formato markdown, ni comentarios. Asegúrate de que los valores sean números (enteros preferiblemente).'
     ].join('\n'),
 
-    GENERAR_RECETA_OPCION_PROMPT: 'Dependiendo de las instrucciones del usuario, genera 3 variantes de nombre de receta con un emoji relacionado, descripcion de 2 lineas y una lista de ingredientes principales IMPORTANTE QUE SEA EN FORMATO JSON con los campos recetaNombre,descripcion,ingredientes(sin tamaño) solamente. No me des texto de respuesta',
+    GENERAR_RECETA_OPCION_PROMPT: 'Dependiendo de las instrucciones del usuario, genera 3 variantes de nombre de receta con un emoji relacionado, descripcion de 2 lineas y una lista de ingredientes principales. IMPORTANTE: Las recetas deben ser PARA 1 PERSONA únicamente. IMPORTANTE QUE SEA EN FORMATO JSON con los campos recetaNombre,descripcion,ingredientes(sin tamaño) solamente. No me des texto de respuesta',
 
     GENERAR_RECETA_COMPLETA_PROMPT: [
         '- Según el nombre y la descripción de la receta, genera los campos "recetaNombre" y "descripcion".',
+        '- IMPORTANTE: Esta receta es PARA 1 PERSONA. Todas las cantidades deben ser para una sola porción.',
         '- Dame la lista completa de ingredientes como "ingredientes", incluyendo:',
         '    - "icon" (emoji representativo)',
         '    - "ingrediente" (nombre del ingrediente)',
-        '    - "cantidad" (cantidad necesaria).',
+        '    - "cantidad" (cantidad necesaria para 1 persona).',
         '- Incluye los pasos detallados de la receta como "pasos".',
-        '- Muestra el total de calorías como "calorias" (solo número).',
+        '- Muestra el total de calorías como "calorias" (solo número, para 1 persona).',
         '- Indica el tiempo de preparación en minutos como "tiempoPreparacion".',
-        '- Indica el número de personas a servir como "servirA".',
+        '- El campo "servirA" debe ser siempre 1 (una persona).',
         '- Devuélveme también una categoría de la receta desde la lista: [Desayuno, Almuerzo, Cena, Snack, Postre].',
         '- Dame la respuesta únicamente en formato JSON.',
         '- El esquema del formato debe ser:',
@@ -45,7 +46,7 @@ const Prompt = {
         '    "cantidad": "string"',
         '    }',
         '],',
-        '"servirA": "number",',
+        '"servirA": 1,',
         '"pasos": ["string"]',
         '}',
     ].join('\n'),

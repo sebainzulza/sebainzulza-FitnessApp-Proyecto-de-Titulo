@@ -2,6 +2,7 @@ import { Stack } from "expo-router";
 import { ConvexProvider, ConvexReactClient } from "convex/react";
 import { UserContext } from "../context/UserContext";
 import { RefreshDataContext } from "../context/RefreshDataContext";
+import { RutinaProvider } from "../context/RutinaContext";
 import { useState } from "react";
 
 // Componente raíz que envuelve la app con el proveedor de datos y navegación
@@ -25,15 +26,17 @@ export default function RootLayout() {
       {/* Provee user y setUser a toda la app */}
       <UserContext.Provider value={{ user, setUser }}>
         <RefreshDataContext.Provider value={{ refreshData, setRefreshData }}>
-          <Stack screenOptions={{
-            headerShown: false
-          }}>
-            <Stack.Screen name="index" />
-            <Stack.Screen name="detalle-ejercicio" />
-            <Stack.Screen name="terminos-condiciones" />
-            <Stack.Screen name="legal-privacidad" />
-            <Stack.Screen name="(tabs)" />
-          </Stack>
+          <RutinaProvider>
+            <Stack screenOptions={{
+              headerShown: false
+            }}>
+              <Stack.Screen name="index" />
+              <Stack.Screen name="detalle-ejercicio" />
+              <Stack.Screen name="terminos-condiciones" />
+              <Stack.Screen name="legal-privacidad" />
+              <Stack.Screen name="(tabs)" />
+            </Stack>
+          </RutinaProvider>
         </RefreshDataContext.Provider>
       </UserContext.Provider>
     </ConvexProvider>
