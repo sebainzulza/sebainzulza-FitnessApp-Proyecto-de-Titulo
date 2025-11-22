@@ -2,8 +2,6 @@ import { View, Text, Platform, Image, FlatList, TouchableOpacity } from 'react-n
 import React, { useContext } from 'react'
 import { UserContext } from '../../context/UserContext'
 import Colors from './../../shared/Colors';
-import { HugeiconsIcon } from '@hugeicons/react-native';
-import { Configuration01Icon, LogoutSquare02Icon, SecurityLockIcon, MessageQuestionIcon, Pen01Icon, JusticeScale02Icon, TrashDelete01Icon } from '@hugeicons/core-free-icons';
 import { auth } from './../../services/FirebaseConfig'
 import { signOut } from 'firebase/auth';
 import { useRouter } from 'expo-router';
@@ -11,43 +9,28 @@ import { useRouter } from 'expo-router';
 const MenuOpciones = [
   {
     titulo: 'Editar Datos',
-    icono: Pen01Icon,
+    emoji: '✏️',
     ruta: 'MisDatos'
   },
   {
     titulo: 'Términos y Condiciones',
-    icono: JusticeScale02Icon,
+    emoji: '⚖️',
     ruta: '/terminos-condiciones'
   },
   {
-    titulo: 'Configuración',
-    icono: Configuration01Icon,
-    ruta: 'MisDatos'
-  },
-  {
-    titulo: 'Seguridad y Privacidad',
-    icono: SecurityLockIcon,
-    ruta: 'MisDatos'
-  },
-  {
-    titulo: 'Ayuda',
-    icono: MessageQuestionIcon,
-    ruta: 'MisDatos'
-  },
-  {
     titulo: 'Legal y Privacidad',
-    icono: JusticeScale02Icon,
+    emoji: '📋',
     ruta: '/legal-privacidad'
   },
   {
     titulo: 'Eliminar Cuenta',
-    icono: TrashDelete01Icon,
+    emoji: '🗑️',
     ruta: '/eliminar-cuenta',
     color: '#FF6B6B'
   },
   {
     titulo: 'Cerrar Sesión',
-    icono: LogoutSquare02Icon,
+    emoji: '🚪',
     ruta: 'logout'
   }
 ]
@@ -118,7 +101,7 @@ export default function Perfil() {
           style={{
             display: 'flex',
             flexDirection: 'row',
-            gap: 6,
+            gap: 10,
             alignItems: 'center',
             padding: 15,
             borderWidth: 0.2,
@@ -127,13 +110,9 @@ export default function Perfil() {
             backgroundColor: Colors.WHITE,
             elevation: 1
           }}>
-            {item.icono ? (
-              <HugeiconsIcon icon={item.icono} size={35} color={item.color || Colors.PRIMARY}/>
-            ) : (
-              <View style={{width: 35, height: 35}} />
-            )}
+            <Text style={{ fontSize: 28 }}>{item.emoji}</Text>
             <Text style={{
-              fontSize:20,
+              fontSize: 20,
               fontWeight: '300',
               color: item.color || 'black'
             }}>{item.titulo}</Text>

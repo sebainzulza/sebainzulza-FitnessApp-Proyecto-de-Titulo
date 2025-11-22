@@ -25,33 +25,10 @@ export default function EliminarCuenta() {
         {
           text: "Eliminar",
           style: "destructive",
-          onPress: eliminarCuenta
+          onPress: () => setShowReauth(true)
         }
       ]
     )
-  }
-
-  const eliminarCuenta = async () => {
-    try {
-      const usuario = auth.currentUser
-      await deleteUser(usuario)
-      setUser(null)
-      router.replace('/')
-    } catch (error) {
-      console.error("Error al eliminar cuenta:", error)
-      // Firebase requires a recent login to perform sensitive operations like deleting the user.
-      if (error?.code === 'auth/requires-recent-login') {
-        // Show UI to reauthenticate
-        setShowReauth(true)
-        return
-      }
-
-      Alert.alert(
-        "Error",
-        "Hubo un problema al eliminar la cuenta. Por favor, inténtalo de nuevo.",
-        [{ text: "OK" }]
-      )
-    }
   }
 
   const handleReauthenticateAndDelete = async () => {
@@ -81,18 +58,19 @@ export default function EliminarCuenta() {
       setUser(null)
       router.replace('/')
     } catch (err) {
-      console.error('Reauth / delete error:', err)
+      // No mostrar el error en consola para evitar que se vea en la app
       if (err?.code === 'auth/wrong-password') {
-        Alert.alert('Contraseña incorrecta', 'La contraseña ingresada es incorrecta.')
-      } else if (err?.code === 'auth/requires-recent-login') {
-        Alert.alert('Error', 'Se requiere iniciar sesión nuevamente antes de eliminar la cuenta.')
+        Alert.alert('Contraseña incorrecta', 'La contraseña ingresada es incorrecta. Por favor, inténtalo de nuevo.')
+      } else if (err?.code === 'auth/invalid-credential') {
+        Alert.alert('Credenciales inválidas', 'Las credenciales proporcionadas no son válidas. Por favor, verifica tu contraseña.')
+      } else if (err?.code === 'auth/too-many-requests') {
+        Alert.alert('Demasiados intentos', 'Has realizado demasiados intentos. Por favor, espera un momento e inténtalo de nuevo.')
       } else {
-        Alert.alert('Error', 'No se pudo eliminar la cuenta. Intenta nuevamente.')
+        Alert.alert('Error', 'No se pudo eliminar la cuenta. Por favor, verifica tu contraseña e inténtalo nuevamente.')
       }
     } finally {
       setLoading(false)
       setPassword('')
-      setShowReauth(false)
     }
   }
 
