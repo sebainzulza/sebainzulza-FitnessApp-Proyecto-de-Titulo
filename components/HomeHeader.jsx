@@ -11,7 +11,7 @@ export default function HomeHeader() {
       alignItems: 'center',
       gap: 10
     }}>
-      <Image source={require('./../assets/images/user.png')}
+      <Image source={require('./../assets/images/user.jpg')}
       style={{
         width: 100,
         height: 100,

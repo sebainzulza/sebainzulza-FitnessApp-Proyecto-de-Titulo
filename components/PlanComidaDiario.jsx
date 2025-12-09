@@ -10,12 +10,14 @@ import moment from 'moment';
 import { UserContext } from '../context/UserContext';
 import PlanAlimenticioCard from './PlanAlimenticioCard';
 import { RefreshDataContext } from '../context/RefreshDataContext';
+import { useRouter } from 'expo-router';
 
 export default function PlanComidaDiario({selectedFecha = null}) {
     const [planComida, setPlanComida] = useState();
     const {user} = useContext(UserContext);
     const convex = useConvex();
     const {refreshData, setRefreshData} = useContext(RefreshDataContext);
+    const router = useRouter();
 
     useEffect(()=>{
         user && GetPlanComidaHoy();
@@ -60,7 +62,7 @@ export default function PlanComidaDiario({selectedFecha = null}) {
                         marginBottom: 20
                     }}>No tienes ningun plan por hoy</Text>
 
-                    <Button title={'Crear Plan de Comida'}/>
+                    <Button title={'Crear Plan de Comida'} onPress={() => router.push('/generar-receta-IA')}/>
                 </View>
                 :<View>
                     <FlatList

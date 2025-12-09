@@ -10,9 +10,9 @@ import { api } from '../../convex/_generated/api';
 import { UserContext } from '../../context/UserContext';
 
 export default function SignUp() {
-    const [name,setName] = useState();
-    const [email,setEmail] = useState();
-    const [password,setPassword] = useState();
+    const [name,setName] = useState('');
+    const [email,setEmail] = useState('');
+    const [password,setPassword] = useState('');
     const [acceptedTerms, setAcceptedTerms] = useState(false);
     const [showTerms, setShowTerms] = useState(false);
     const [showLegal, setShowLegal] = useState(false);
@@ -83,9 +83,9 @@ export default function SignUp() {
             merginTop: 20,
             width: '100%'
         }}>
-            <Input placeholder={'Nombre'} onChangeText={setName}/>
-            <Input placeholder={'Email'} onChangeText={setEmail}/>
-            <Input placeholder={'Contraseña'} password={true} onChangeText={setPassword}/>
+            <Input placeholder={'Nombre'} value={name} onChangeText={setName} inputType='text'/>
+            <Input placeholder={'Email'} value={email} onChangeText={setEmail} inputType='email' keyboardType='email-address'/>
+            <Input placeholder={'Contraseña'} value={password} password={true} onChangeText={setPassword} inputType='text'/>
         </View>
 
         <View style={{

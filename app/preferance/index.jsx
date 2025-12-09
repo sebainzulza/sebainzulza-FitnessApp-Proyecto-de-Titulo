@@ -141,6 +141,9 @@ export default function Preferance() {
                 }}>
                     <Input placeholder={'Ej. 70'} label='Peso (kg)'
                         onChangeText={setPeso}
+                        value={peso}
+                        inputType='decimal'
+                        keyboardType='decimal-pad'
                     />
                 </View>
                 <View style={{
@@ -148,6 +151,9 @@ export default function Preferance() {
                 }}>
                     <Input placeholder={'Ej. 1.70'} label='Altura (cm)'
                         onChangeText={setAltura}
+                        value={altura}
+                        inputType='decimal'
+                        keyboardType='decimal-pad'
                     />
                 </View>
                 <View style={{
@@ -155,6 +161,9 @@ export default function Preferance() {
                 }}>
                     <Input placeholder={'Ej. 20'} label='Edad (años)'
                         onChangeText={setEdad}
+                        value={edad}
+                        inputType='number'
+                        keyboardType='number-pad'
                     />
                 </View>
 
@@ -215,6 +224,9 @@ export default function Preferance() {
 
             <Input placeholder={'Ej. 3'} label='Cuántos días entrenas a la semana?'
                 onChangeText={setDiasEntrenamientoPorSemana}
+                value={diasEntrenamientoPorSemana}
+                inputType='number'
+                keyboardType='number-pad'
             />
 
             <View style={{

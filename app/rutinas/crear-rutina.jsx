@@ -107,6 +107,7 @@ export default function CrearRutina() {
                             backgroundColor: '#F9F9F9'
                         }}
                         maxLength={50}
+                        autoCapitalize="sentences"
                     />
                     <Text style={{ 
                         color: Colors.GRAY, 
@@ -177,7 +178,7 @@ export default function CrearRutina() {
                         value={notas}
                         onChangeText={setNotas}
                         placeholder="Añade notas o detalles sobre esta rutina..."
-                        multiline
+                        multiline={true}
                         numberOfLines={4}
                         style={{
                             borderWidth: 1,
@@ -190,6 +191,7 @@ export default function CrearRutina() {
                             height: 100
                         }}
                         maxLength={200}
+                        autoCapitalize="sentences"
                     />
                     <Text style={{ 
                         color: Colors.GRAY, 

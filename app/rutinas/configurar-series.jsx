@@ -361,10 +361,12 @@ export default function ConfigurarSeries() {
                                 <TextInput
                                     value={ejercicio.peso.toString()}
                                     onChangeText={(text) => {
-                                        const valor = parseInt(text) || 0
+                                        // Solo permitir números
+                                        const numericText = text.replace(/[^0-9]/g, '');
+                                        const valor = parseInt(numericText) || 0;
                                         if (valor <= 500) actualizarEjercicio(index, 'peso', valor)
                                     }}
-                                    keyboardType="numeric"
+                                    keyboardType="number-pad"
                                     style={{ flex: 1, textAlign: 'center', fontSize: 20, fontWeight: 'bold', color: Colors.DARKBLUE }}
                                 />
                                 <TouchableOpacity onPress={() => incrementar(index, 'peso')} style={{ backgroundColor: Colors.PRIMARY, width: 40, height: 40, borderRadius: 10, alignItems: 'center', justifyContent: 'center' }}>

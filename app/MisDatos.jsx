@@ -136,18 +136,24 @@ export default function MisDatos() {
 					<Input placeholder={'Ej. 70'} label='Peso (kg)'
 						value={peso}
 						onChangeText={setPeso}
+						inputType='decimal'
+						keyboardType='decimal-pad'
 					/>
 				</View>
 				<View style={{ flex: 1 }}>
 					<Input placeholder={'Ej. 1.70'} label='Altura (cm)'
 						value={altura}
 						onChangeText={setAltura}
+						inputType='decimal'
+						keyboardType='decimal-pad'
 					/>
 				</View>
 				<View style={{ flex: 1 }}>
 					<Input placeholder={'Ej. 20'} label='Edad (años)'
 						value={edad}
 						onChangeText={setEdad}
+						inputType='number'
+						keyboardType='number-pad'
 					/>
 				</View>
 			</View>
@@ -179,6 +185,8 @@ export default function MisDatos() {
 			<Input placeholder={'Ej. 3'} label='Días de entrenamiento por semana'
 				value={diasEntrenamientoPorSemana}
 				onChangeText={setDiasEntrenamientoPorSemana}
+				inputType='number'
+				keyboardType='number-pad'
 			/>
 
 			<View style={{ marginTop: 15 }}>

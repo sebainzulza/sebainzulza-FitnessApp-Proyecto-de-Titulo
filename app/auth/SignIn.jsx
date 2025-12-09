@@ -10,8 +10,8 @@ import { api } from '../../convex/_generated/api';
 import { UserContext } from '../../context/UserContext';
 
 export default function SignIn() {
-    const [email,setEmail] = useState();
-    const [password,setPassword] = useState();
+    const [email,setEmail] = useState('');
+    const [password,setPassword] = useState('');
     const convex=useConvex();
     const {user,setUser}=useContext(UserContext);
     const onSignIn = () => {
@@ -64,8 +64,8 @@ export default function SignIn() {
             merginTop: 20,
             width: '100%'
         }}>
-            <Input placeholder={'Email'} onChangeText={setEmail}/>
-            <Input placeholder={'Contraseña'} password={true} onChangeText={setPassword}/>
+            <Input placeholder={'Email'} value={email} onChangeText={setEmail} inputType='email' keyboardType='email-address'/>
+            <Input placeholder={'Contraseña'} value={password} password={true} onChangeText={setPassword} inputType='text'/>
         </View>
 
         <View style={{

@@ -1,4 +1,4 @@
-import { View, Text, Platform, TextInput, StyleSheet } from 'react-native'
+import { View, Text, Platform, TextInput, StyleSheet, Alert } from 'react-native'
 import React, { useState, useContext, useEffect } from 'react'
 import Colors from './../../shared/Colors'
 import Button from './../../components/shared/Button'
@@ -25,6 +25,46 @@ export default function GenerarRecetaIA() {
         }
     }, [user]);
     const GenerarRecetaOpciones = async () => {
+        // Validar que el input contenga algo relacionado con comida
+        if (!input || input.trim().length < 2) {
+            alert('Por favor ingresa ingredientes o una idea de receta.');
+            return;
+        }
+
+        // Palabras clave que indican que NO es comida
+        const palabrasNoPermitidas = [
+            // Vehículos
+            'carro', 'auto', 'coche', 'vehiculo', 'moto', 'bicicleta', 'camion', 'avion',
+            // Electrónicos
+            'computadora', 'ordenador', 'laptop', 'telefono', 'celular', 'television', 'radio', 'tablet',
+            // Construcción y edificios
+            'casa', 'edificio', 'construccion', 'pared', 'techo', 'ventana', 'puerta',
+            // Herramientas
+            'martillo', 'clavo', 'clavos', 'destornillador', 'llave', 'taladro', 'sierra', 'tornillo', 'tornillos',
+            // Materiales de construcción
+            'madera', 'cemento', 'concreto', 'ladrillo', 'ladrillos', 'arena', 'grava', 'piedra', 'metal', 'acero', 'hierro', 'plastico',
+            // Ropa
+            'ropa', 'zapato', 'camisa', 'pantalon', 'vestido', 'sombrero', 'gorra',
+            // Muebles
+            'mueble', 'silla', 'mesa', 'sofa', 'cama', 'armario', 'estante',
+            // Otros objetos
+            'papel', 'carton', 'libro', 'cuaderno', 'lapiz', 'boligrafo', 'pintura', 'barniz'
+        ];
+
+        const inputLower = input.toLowerCase();
+        const contieneNoPermitido = palabrasNoPermitidas.some(palabra => 
+            inputLower.includes(palabra)
+        );
+
+        if (contieneNoPermitido) {
+            Alert.alert(
+                'Alerta',
+                '⚠️ Solo se pueden generar recetas de comida real y comestible.\n\nPor favor ingresa ingredientes o alimentos para cocinar.',
+                [{ text: 'OK' }]
+            );
+            return;
+        }
+
         setLoading(true);
         try {
             const PROMPT = input + Prompt.GENERAR_RECETA_OPCION_PROMPT;
@@ -60,6 +100,12 @@ export default function GenerarRecetaIA() {
                 color: Colors.GRAY,
                 fontSize: 16
             }}>Genera recetas personalizadas usando IA</Text>
+            <Text style={{
+                marginTop: 10,
+                color: Colors.GRAY,
+                fontSize: 14,
+                fontStyle: 'italic'
+            }}>💡 Si eres alérgico a algún alimento o tienes restricciones alimenticias, inclúyelas en tu solicitud.</Text>
 
             <Modal visible={showDisclaimer} transparent animationType='fade'>
                 <View style={{ flex: 1, backgroundColor: '#00000080', justifyContent: 'center', padding: 20 }}>
@@ -91,7 +137,10 @@ export default function GenerarRecetaIA() {
             <TextInput
             style={styles.textArea}
             onChangeText={(value)=>setInput(value)}
-            placeholder='Ingresa tus ingredientes o idea de receta'/>
+            value={input}
+            placeholder='Ingresa tus ingredientes o idea de receta'
+            multiline={true}
+            textAlignVertical='top'/>
 
             <View style={{
                 marginTop: 25

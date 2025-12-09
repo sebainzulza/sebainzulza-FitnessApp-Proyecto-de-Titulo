@@ -70,7 +70,7 @@ export default function Perfil() {
         alignItems: 'center',
         marginTop: 15
       }}>
-        <Image source={require('./../../assets/images/user.png')}
+        <Image source={require('./../../assets/images/user.jpg')}
           style={{
             width: 100,
             height: 100,

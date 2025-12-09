@@ -224,7 +224,17 @@ export default function MisRutinas() {
                 shadowRadius: 4,
                 elevation: 3
             }}>
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10 }}>
+                    <TouchableOpacity
+                        onPress={() => router.push('/(tabs)/Ejercicios')}
+                        style={{
+                            padding: 8,
+                            marginRight: 10
+                        }}
+                    >
+                        <Text style={{ fontSize: 24 }}>←</Text>
+                    </TouchableOpacity>
+                    
                     <View style={{ flex: 1 }}>
                         <Text style={{ fontSize: 28, fontWeight: 'bold', color: Colors.DARKBLUE }}>
                             Mis Rutinas
