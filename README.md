@@ -502,7 +502,6 @@ Guardar en historial → Ver estadísticas
 |------------|--------|-------|
 | ✅ iOS | Soportado | iPhone y iPad |
 | ✅ Android | Soportado | Teléfonos y tablets |
-| ✅ Web | Soportado | Navegadores modernos |
 
 ---
 
