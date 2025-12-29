@@ -634,41 +634,12 @@ export const auth = Platform.OS == 'web'
 
 ---
 
-## 🤝 Contribuciones
-
-### Cómo Contribuir
-
-1. Fork el repositorio
-2. Crear una rama feature:
-   ```bash
-   git checkout -b feature/NuevaCaracteristica
-   ```
-3. Realizar cambios y commit:
-   ```bash
-   git commit -m 'feat: Agregar nueva característica'
-   ```
-4. Push a la rama:
-   ```bash
-   git push origin feature/NuevaCaracteristica
-   ```
-5. Crear un Pull Request
-
 ### Convenciones de Código
 - Usar componentes funcionales con Hooks
 - Nombres de archivos en PascalCase para componentes
 - Usar PropTypes o TypeScript para tipado
 - Comentarios claros en funciones complejas
 - Mantener componentes pequeños y reutilizables
-
----
-
-## 🐛 Problemas Conocidos y Soluciones
-
-### Problema: Error de autenticación en Android
-**Solución:** Verificar que `@react-native-async-storage/async-storage` esté instalado correctamente
-
-### Problema: API Key de OpenRouter inválida
-**Solución:** Verificar que la variable `EXPO_PUBLIC_OPENROUTER_API_KEY` esté correctamente configurada en `.env.local` y reiniciar el servidor
 
 ---
 
@@ -684,24 +655,6 @@ export const auth = Platform.OS == 'web'
 - [ ] Exportar/importar rutinas y planes
 - [ ] Videos de ejercicios
 - [ ] Chat con entrenador AI
-
----
-
-## 📝 Licencia
-
-[Especificar la licencia del proyecto - MIT, Apache, GPL, etc.]
-
----
-
-## 👨‍💻 Autor y Equipo
-
-[Agregar información del autor o equipo de desarrollo]
-
----
-
-## 📞 Soporte y Contacto
-
-[Agregar información de contacto o links a issues de GitHub]
 
 ---
 
